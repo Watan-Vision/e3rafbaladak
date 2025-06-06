@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>اعرف بلدك - مبادرة وطنية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -16,7 +17,6 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Default to RTL */
         html[lang="ar"] {
             direction: rtl;
         }
@@ -36,11 +36,11 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        body.light-mode .dropdown-content {
+        body.light-mode .dropdown-content, body.light-mode .sidebar {
             background-color: #FFF8E7;
         }
 
-        body.light-mode .dropdown-content a {
+        body.light-mode .dropdown-content a, body.light-mode .sidebar a {
             color: #4A3728;
         }
 
@@ -78,11 +78,11 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
-        body.dark-mode .dropdown-content {
+        body.dark-mode .dropdown-content, body.dark-mode .sidebar {
             background-color: #2F3B3C;
         }
 
-        body.dark-mode .dropdown-content a {
+        body.dark-mode .dropdown-content a, body.dark-mode .sidebar a {
             color: #F5F5DC;
         }
 
@@ -117,10 +117,9 @@
             padding: 15px;
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 1000;
         }
 
-        /* Header logo section */
         .header-logo {
             display: flex;
             align-items: center;
@@ -171,45 +170,126 @@
             50% { transform: translateY(-10px); box-shadow: 0 0 25px rgba(255, 215, 0, 0.8); }
         }
 
-        /* Settings icon and dropdown */
-        .settings-container {
+        /* Sidebar */
+        .sidebar-container {
             position: relative;
         }
 
-        .settings {
-            position: relative;
+        .sidebar-toggle {
             cursor: pointer;
             font-size: 2rem;
             padding: 10px;
             display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 110px;
+            right: 0;
+            width: 250px;
+            height: calc(100% - 110px);
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            z-index: 900;
+            border-radius: 0 10px 10px 0;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar a {
+            padding: 15px 20px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            text-align: right;
+        }
+
+        html[lang="en"] .sidebar a {
+            text-align: left;
+        }
+
+        .sidebar a:hover {
+            background-color: #D4AF37;
+            color: #4A3728;
+        }
+
+        .dark-mode .sidebar a:hover {
+            background-color: #E8C872;
+            color: #1A2526;
+        }
+
+        .sidebar a.active {
+            background-color: rgba(232, 200, 114, 0.3);
+            font-weight: bold;
+        }
+
+        /* Settings */
+        .settings-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        html[lang="en"] .settings-container {
+            right: auto;
+            left: 20px;
+        }
+
+        .settings {
+            cursor: pointer;
+            font-size: 1.8rem;
+            padding: 10px;
+            display: inline-block;
+            background-color: #D4AF37;
+            color: #4A3728;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .settings {
+            background-color: #E8C872;
+            color: #1A2526;
+        }
+
+        .settings:hover {
+            transform: scale(1.1);
         }
 
         .dropdown {
             position: relative;
-            display: inline-block;
         }
 
-        /* Dropdown positioning */
         .dropdown-content {
             display: none;
             position: absolute;
-            min-width: 200px;
+            min-width: 180px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            z-index: 100;
+            z-index: 1000;
             border-radius: 5px;
-            top: 100%;
-            margin-top: 5px;
+            transform: translateY(-100%);
+            margin-bottom: 10px;
         }
 
-        /* RTL/LTR specific dropdown positioning */
         html[lang="ar"] .dropdown-content {
-            left: 0;
-            right: auto;
+            right: 0;
+            left: auto;
         }
 
         html[lang="en"] .dropdown-content {
-            right: 0;
-            left: auto;
+            left: 0;
+            right: auto;
         }
 
         .dropdown-content a {
@@ -238,13 +318,11 @@
             color: #1A2526;
         }
 
-        /* Make dropdown visible on hover of dropdown AND dropdown content */
         .dropdown:hover .dropdown-content,
         .dropdown-content:hover {
             display: block;
         }
 
-        /* Welcome Section */
         .welcome-section {
             text-align: center;
             padding: 70px 20px;
@@ -268,13 +346,13 @@
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        /* Button container to ensure centering */
         .button-container {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             margin-top: 20px;
+            gap: 20px;
         }
 
         .cta-btn {
@@ -293,13 +371,12 @@
             transform: scale(1.05);
             box-shadow: 0 6px 15px rgba(255, 215, 0, 0.5);
         }
-      
+
         a {
-          text-decoration: none;
-          color: #1A2526;
+            text-decoration: none;
+            color: #1A2526;
         }
 
-        /* Modern Light Animation */
         .modern-light {
             position: absolute;
             top: -20%;
@@ -318,7 +395,6 @@
             100% { transform: translate(0, 0) rotate(360deg); }
         }
 
-        /* Content Sections */
         .content-section {
             margin: 30px;
             padding: 30px;
@@ -345,7 +421,6 @@
             margin-bottom: 20px;
         }
 
-        /* Table Styles */
         .initiative-table {
             width: 100%;
             border-collapse: collapse;
@@ -359,7 +434,7 @@
             text-align: right;
         }
 
-        html[lang="en"] .initiative-table th, 
+        html[lang="en"] .initiative-table th,
         html[lang="en"] .initiative-table td {
             text-align: left;
         }
@@ -378,7 +453,6 @@
             background-color: rgba(232, 200, 114, 0.2);
         }
 
-        /* List Styles */
         .initiative-list {
             margin-bottom: 20px;
             padding-right: 20px;
@@ -395,7 +469,6 @@
             line-height: 1.6;
         }
 
-        /* Footer */
         footer {
             text-align: center;
             padding: 30px;
@@ -403,14 +476,17 @@
             font-size: 1.2rem;
         }
 
-        /* Emoji Styles */
         .emoji {
             font-size: 1.5em;
             margin-left: 5px;
             vertical-align: middle;
         }
 
-        /* Language-specific content */
+        html[lang="en"] .emoji {
+            margin-left: 0;
+            margin-right: 5px;
+        }
+
         .ar-content {
             display: block;
         }
@@ -427,7 +503,6 @@
             display: block;
         }
 
-        /* Tablet Responsiveness */
         @media (max-width: 768px) {
             .welcome-section h1 {
                 font-size: 2.5rem;
@@ -455,7 +530,7 @@
             .content-section p {
                 font-size: 1.1rem;
             }
-            .dropdown-content {
+            .dropdown-content, .sidebar {
                 min-width: 180px;
             }
             .initiative-table th, .initiative-table td {
@@ -465,9 +540,12 @@
                 width: 28px;
                 height: 21px;
             }
+            .sidebar {
+                top: 90px;
+                height: calc(100% - 90px);
+            }
         }
 
-        /* Mobile Responsiveness */
         @media (max-width: 480px) {
             .welcome-section h1 {
                 font-size: 2rem;
@@ -495,7 +573,7 @@
             .content-section p {
                 font-size: 1rem;
             }
-            .dropdown-content {
+            .dropdown-content, .sidebar {
                 min-width: 160px;
             }
             .initiative-table {
@@ -508,6 +586,11 @@
                 width: 24px;
                 height: 18px;
             }
+            .sidebar {
+                width: 200px;
+                top: 80px;
+                height: calc(100% - 80px);
+            }
         }
     </style>
 </head>
@@ -516,25 +599,44 @@
     <header class="header">
         <div class="header-logo">
             <div class="header-title-circle">
-                <img src="logo.jpg" alt="اعرف بلدك">
+                <img src="logo.jpg" alt="اعرف بلدك" onerror="this.src='fallback-logo.png';">
             </div>
             <div class="header-title">
                 <span class="ar-content">اعرف بلدك <svg class="egypt-flag" xmlns="http://www.w3.org/2000/svg" width="32" height="24" viewBox="0 0 640 480"><path fill="#fff" d="M0 0h640v480H0z"/><path fill="#ce1126" d="M0 0h640v160H0z"/><path d="M0 320h640v160H0z"/><path fill="#fff" d="M320 232l-14 4 8 13-15-2-1 15-11-10-11 10-1-15-15 2 8-13-14-4 14-4-8-13 15 2 1-15 11 10 11-10 1 15 15-2-8 13z" stroke="#c09300" stroke-width="1.5"/></svg></span>
                 <span class="en-content">Know Your Country</span>
             </div>
         </div>
-        <div class="settings-container">
-            <div class="dropdown">
-                <div class="settings">
-                    <span>⚙️</span>
+        <div class="sidebar-container">
+            <div class="sidebar-toggle" role="button" aria-label="Toggle Sidebar" tabindex="0">
+                <span>☰</span>
+            </div>
+            <div class="sidebar">
+                <div class="ar-content">
+                    <a href="https://rules.e3rafbaladak.com">لوائح المبادرة</a>
+                    <a href="https://volunteer.e3rafbaladak.com">التسجيل للمتطوعين</a>
+                    <a href="https://eid.e3rafbaladak.com">تهنئة لعيد الاضحى</a>
                 </div>
-                <div class="dropdown-content">
-                    <a href="#" onclick="toggleMode(event)">تبديل إلى Light Mode</a>
-                    <a href="#" onclick="toggleLanguage(event)">تبديل إلى الإنجليزية</a>
+                <div class="en-content">
+                    <a href="https://rules.e3rafbaladak.com">Initiative regulations</a>
+                    <a href="https://volunteer.e3rafbaladak.com">Registration for volunteers</a>
+                    <a href="https://eid.e3rafbaladak.com">Eid Al-Adha greetings</a>
                 </div>
             </div>
         </div>
     </header>
+
+    <!-- Settings -->
+    <div class="settings-container">
+        <div class="dropdown">
+            <div class="settings" role="button" aria-label="Open Settings Menu" tabindex="0">
+                <span>⚙️</span>
+            </div>
+            <div class="dropdown-content">
+                <a href="#" onclick="toggleMode(event)">تبديل إلى Light Mode</a>
+                <a href="#" onclick="toggleLanguage(event)">تبديل إلى الإنجليزية</a>
+            </div>
+        </div>
+    </div>
 
     <!-- Welcome Section -->
     <section class="welcome-section">
@@ -543,11 +645,9 @@
         <h1 class="en-content">"Know Your Country" Initiative "Soon"</h1>
         <p class="ar-content">أول مبادرة ميدانية ينظمها فريق "رؤية وطن" داخل المدرسة خلال النشاط الصيفي، بهدف رفع الوعي الوطني لدى الطلاب وتنمية مهاراتهم بأساليب مبتكرة وتفاعلية.</p>
         <p class="en-content">The first field initiative organized by the "National Vision" team within the school during summer activities, aiming to raise national awareness among students and develop their skills through innovative and interactive methods.</p>
-        
-        <!-- Button container to ensure perfect centering -->
         <div class="button-container">
-            <button class="cta-btn ar-content"><a href="https://forms.gle/sR4EbMMo6uz2gJw77">تطوع الان</a></button>
-            <button class="cta-btn en-content"><a href="https://forms.gle/sR4EbMMo6uz2gJw77">volunteer now</a></button>
+            <button class="cta-btn ar-content"><a href="https://volunteer.e3rafbaladak.com">تطوع الآن</a></button>
+            <button class="cta-btn en-content"><a href="https://volunteer.e3rafbaladak.com">Volunteer Now</a></button>
         </div>
     </section>
 
@@ -578,7 +678,6 @@
         <h2 class="en-content">🧱 Initiative Components</h2>
         <p class="ar-content">تضم المبادرة 7 أركان رئيسية موزعة داخل المدرسة، كل ركن يشرف عليه فريق مدرب، وهي كالتالي:</p>
         <p class="en-content">The initiative includes 7 main sections distributed throughout the school, each supervised by a trained team, as follows:</p>
-        
         <table class="initiative-table ar-content">
             <tr>
                 <th>الركن</th>
@@ -613,7 +712,6 @@
                 <td>تدريب الطلاب على إنتاج محتوى وطني (مصوّر / مكتوب).</td>
             </tr>
         </table>
-
         <table class="initiative-table en-content">
             <tr>
                 <th>Section</th>
@@ -666,7 +764,6 @@
         <p class="en-content">The "National Vision" team, an organized student team interested in presenting national and awareness initiatives within the school.</p>
         <p class="ar-content">تحت إشراف السادة المعلمين والأخصائيين التربويين بالمدرسة.</p>
         <p class="en-content">Under the supervision of teachers and educational specialists at the school.</p>
-        
         <h3 class="ar-content">🌐 الدعم الإلكتروني للمبادرة</h3>
         <h3 class="en-content">🌐 Electronic Support for the Initiative</h3>
         <p class="ar-content">لنشر المحتوى المصوّر والتوثيق الكامل للمبادرة، ودعم الطلاب بالمصادر.</p>
@@ -715,12 +812,13 @@
             }
         }
 
-        function applyTranslations(lang) {
+        function applyTranslations() {
+            const lang = document.documentElement.lang;
             const trans = translations[lang];
             document.title = trans.pageTitle;
             document.querySelector('.header-title-circle img').alt = trans.logoAlt;
-            document.querySelector('.dropdown-content a[onclick^="toggleMode"]').textContent = document.body.classList.contains('dark-mode') ? trans.toggleModeLight : trans.toggleModeDark;
-            document.querySelector('.dropdown-content a[onclick^="toggleLanguage"]').textContent = lang === 'ar' ? trans.toggleLangEn : trans.toggleLangAr;
+            document.querySelector('.dropdown-content a[onclick="toggleMode(event)"]').textContent = document.body.classList.contains('dark-mode') ? trans.toggleModeLight : trans.toggleModeDark;
+            document.querySelector('.dropdown-content a[onclick="toggleLanguage(event)"]').textContent = lang === 'ar' ? trans.toggleLangEn : trans.toggleLangAr;
         }
 
         function toggleLanguage(event) {
@@ -731,25 +829,39 @@
 
             htmlEl.lang = newLang;
             htmlEl.dir = newLang === 'ar' ? 'rtl' : 'ltr';
-
-            // Apply translations
-            applyTranslations(newLang);
+            applyTranslations();
         }
 
-        // Set initial state based on HTML lang attribute
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('active');
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const initialLang = document.documentElement.lang || 'ar';
             document.documentElement.lang = initialLang;
             document.documentElement.dir = initialLang === 'ar' ? 'rtl' : 'ltr';
-            applyTranslations(initialLang);
-            
-            // Ensure initial mode text is correct
-            const modeLink = document.querySelector('.dropdown-content a[onclick^="toggleMode"]');
-            if (document.body.classList.contains('dark-mode')) {
-                modeLink.textContent = translations[initialLang].toggleModeLight;
-            } else {
-                modeLink.textContent = translations[initialLang].toggleModeDark;
-            }
+            applyTranslations();
+
+            const sidebarToggle = document.querySelector('.sidebar-toggle');
+            const sidebar = document.querySelector('.sidebar');
+
+            sidebarToggle.addEventListener('click', toggleSidebar);
+
+            sidebar.addEventListener('mouseleave', () => {
+                sidebar.classList.remove('active');
+            });
+
+            sidebar.addEventListener('mouseenter', () => {
+                sidebar.classList.add('active');
+            });
+
+            const sidebarLinks = document.querySelectorAll('.sidebar a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                });
+            });
         });
     </script>
 </body>
